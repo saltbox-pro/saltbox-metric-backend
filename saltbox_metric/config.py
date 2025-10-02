@@ -17,6 +17,15 @@ class Settings(BaseSettings):
     debug: bool = False
     origins: list[str] = Field(['*'], description='CORS allowed resources')
 
+    # Prometheus client
+    prometheus_client_port: int = 8004
+    prometheus_client_addr: str = '0.0.0.0'  # noqa: S104
+    prometheus_client_certfile: str | None = None
+    prometheus_client_keyfile: str | None = None
+    prometheus_client_cafile: str | None = None
+    prometheus_client_capath: str | None = None
+    prometheus_client_auth_required: bool = False
+
     model_config = SettingsConfigDict(env_file=ENV_FILE, extra='ignore')
 
 

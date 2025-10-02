@@ -32,7 +32,7 @@ dev = [
 reload = []
 
 [project.scripts]
-saltbox-metric-app = "saltbox_metric.app:main"
+saltbox-metric-app = "saltbox_metric.metrics.app:main"
 
 # [metadata]
 # url = "https://gitlab.com/saltbox/saltbox-metric"
