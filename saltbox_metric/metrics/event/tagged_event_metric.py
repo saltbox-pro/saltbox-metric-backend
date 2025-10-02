@@ -1,5 +1,4 @@
 import re
-import sys
 from typing import ClassVar
 
 from prometheus_client import Summary
