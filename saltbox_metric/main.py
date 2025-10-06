@@ -62,7 +62,7 @@ async def health_check() -> HealthCheckResponse:
     )
 
 
-@app.exception_handler(HTTPException)
+@app.exception_handler(exc_class_or_status_code=HTTPException)
 async def logged_http_exception_handler(request: Request, exc: HTTPException) -> Response:
     """Custom exception handler for HTTP exceptions with logging"""
     logger.exception(f'HTTP Exception: {request.url.path}: {exc}', exc_info=True)

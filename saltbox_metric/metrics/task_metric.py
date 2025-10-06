@@ -49,17 +49,17 @@ class TaskMetric(BaseMetric):
 
         logger.debug('Mapping job task (jid=%s | tid=%s) to target minions: %r', jid, tid, tgt)
         self.metric.labels(master=data['master_id'], status=self._STATUS_ON_PROCESS).inc()  # type: ignore[attr-defined]
-        await self.redis_client.sadd(f'jid:{jid}:tgt', *tgt)
+        _ = await self.redis_client.sadd(f'jid:{jid}:tgt', *tgt)
 
     async def _handle_ret_task(self, data: MessageDataType) -> None:
         jid = data['jid']
         tid = data['tid']
         mid = data['minion_id']
 
-        await self.redis_client.sadd(f'jid:{jid}:executed', mid)
+        _ = await self.redis_client.sadd(f'jid:{jid}:executed', mid)
 
         job_status = data['job_status']
-        await self.redis_client.hset(f'tid:{tid}:mid_statuses', mid, job_status)
+        _ = await self.redis_client.hset(f'tid:{tid}:mid_statuses', mid, job_status)
         logger.debug('Extracted job(jid=%s | tid=%s) status from mid=%s: %s', jid, tid, mid, job_status)
 
         expected_executed_minions = await self.redis_client.smembers(f'jid:{jid}:tgt')

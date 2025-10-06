@@ -9,6 +9,7 @@ from saltbox_metric.metrics.types import MessageDataType
 
 
 class JobReturnMetric(BaseJobMetric):
+
     _tag_pattern = re.compile(r'^metrics:job_return$')
 
     @property

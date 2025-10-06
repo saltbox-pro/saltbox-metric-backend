@@ -9,25 +9,30 @@ METRIC_SPECIFICATIONS = [
         'key': 'job_new',
         'class': JobNewMetric,
         'desc': 'Total number of new jobs received',
-        'labels': JobNewMetric.labels,
+        'labels': JobNewMetric.labels
     },
     {
         'key': 'job_ret',
         'class': JobReturnMetric,
         'desc': 'Total number of job returns',
-        'labels': JobReturnMetric.labels,
+        'labels': JobReturnMetric.labels
     },
     {
         'key': 'event_total',
         'class': TaggedEventCountMetric,
         'desc': 'Total number of tagged events',
-        'labels': TaggedEventCountMetric.labels,
+        'labels': TaggedEventCountMetric.labels
     },
     {
         'key': 'event_payload_size',
         'class': EventPayloadSizeMetric,
         'desc': 'Sum of payload sizes for all tagged events',
-        'labels': EventPayloadSizeMetric.labels,
+        'labels': EventPayloadSizeMetric.labels
     },
-    {'key': 'task_status', 'class': TaskMetric, 'desc': 'Task status metric', 'labels': TaskMetric.labels},
+    {
+        'key': 'task_status',
+        'class': TaskMetric,
+        'desc': 'Metrics related to the execution status of tasks',
+        'labels': TaskMetric.labels
+    },
 ]

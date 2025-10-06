@@ -12,12 +12,13 @@ class BaseMetric(abc.ABC):
     """
     A base class for handling prometheus metrics
 
-    Attributes:
-        registry: Registry of acceptable metrics
-        name: Metric name
-        desc: Description of the metric
-        redis_client: Redis client
-        labels: Labels displayed in Grafana UI
+    Attributes
+    ----------
+        - registry: Registry of acceptable metrics
+        - name: Metric name
+        - desc: Description of the metric
+        - redis_client: Redis client
+        - labels: Labels displayed in Grafana UI
     """
 
     def __init__(
@@ -44,6 +45,13 @@ class BaseMetric(abc.ABC):
         return self._tag_pattern
 
     def can_handle(self, tag: str) -> bool:
+        """
+        Determine this metric should process an event with the given tag
+
+        Parameters
+        ----------
+            - tag: The event tag from the salt bus (e.g., 'salt/job/<jid>/...')
+        """
         return bool(self.tag_pattern.match(tag))
 
     @property
@@ -51,11 +59,23 @@ class BaseMetric(abc.ABC):
     def labels(self) -> list[str]:
         """
         Displayed metric labels on the Grafana side
+
+        Returns
+        -------
+            - list[str]: List of metric labels
         """
         ...
 
     @abc.abstractmethod
-    def _create(self) -> MetricWrapperBase: ...
+    def _create(self) -> MetricWrapperBase:
+        """
+        Creates Prometheus metrics
+
+        Returns
+        -------
+            - MetricWrapperBase: Specific impl of the Prometheus metric
+        """
+        ...
 
     @abc.abstractmethod
     async def aggregate(self, tag: str, data: MessageDataType) -> None: ...
