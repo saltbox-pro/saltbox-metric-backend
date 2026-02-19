@@ -70,3 +70,4 @@ Trigger API Client build:
     include: 
       - project: 'saltbox/ci-lib'
         file: 'gen-api-client.yml'
+    strategy: mirror
