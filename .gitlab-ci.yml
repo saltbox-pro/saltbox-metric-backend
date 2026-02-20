@@ -3,7 +3,6 @@
 stages:
   - lint
   - build
-  - gen-api-client
 
 
 include:
@@ -61,13 +60,15 @@ Mypy:
 
 
 Trigger API Client build:
-  stage: gen-api-client
+  stage: build
   variables:
     MODULE_NAME: saltbox_metric
     SALTBOX_ENV_FILE: 'tests/test.env'
-    SALTBOX_METRIC_ENV_FILE: 'tests/test.env'
+    SALTBOX_METRIC_ENV_FILE: $SALTBOX_ENV_FILE
   trigger:
     include: 
       - project: 'saltbox/ci-lib'
         file: 'gen-api-client.yml'
     strategy: mirror
+  rules:
+    - if: $CI_PIPELINE_SOURCE == 'push'
