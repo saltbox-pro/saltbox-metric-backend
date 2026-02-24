@@ -29,7 +29,9 @@ dev = [
   "pytest-mock>=3.14.0",
   "pytest-sugar>=1.0.0",
 ]
-reload = []
+reload = [
+  "watchfiles"
+]
 
 [project.scripts]
 saltbox-metric-app = "saltbox_metric.metrics.app:main"

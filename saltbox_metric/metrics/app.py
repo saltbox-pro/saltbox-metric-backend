@@ -21,6 +21,8 @@ class MetricApp:
         self.metric_router = MetricRouter(metrics=metrics)
 
     async def start(self) -> None:
+
+        logger.info('Starting metric app')
         await start_prometheus_client(registry=metric_registry)
 
         ps = self.redis_client.pubsub()
@@ -38,16 +40,15 @@ class MetricApp:
 
 
 async def async_main() -> None:
-    logger.info('Starting metric app')
-
     app = MetricApp()
-
     await app.start()
 
 
 def main() -> None:
-    asyncio.run(async_main())
-
+    try:
+        asyncio.run(async_main())
+    except KeyboardInterrupt: # NOTE: Unnecessary traceback for dev mode
+        pass
 
 if __name__ == '__main__':
     main()

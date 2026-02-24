@@ -31,7 +31,11 @@ cmd_uvicorn() {
 
 cmd_shell() {
   shift
-  cmd="$*"
+  if [ "$DEV_MODE" = 1 ]; then
+    cmd="watchfiles --filter python $* /mnt/saltbox-metric /mnt/saltbox-sdk"
+  else
+    cmd="$*"
+  fi
 }
 
 wrong_cmd() {
