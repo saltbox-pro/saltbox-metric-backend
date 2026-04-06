@@ -10,12 +10,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - `Watchfiles` hot-reload for dev mode
+- Apache 2.0 license
 
 ### Changed
 
+- Update build API client job
+- Change API client generation trigger strategy
+- Separate API client generation
 
 ### Fixed
 
+- Updated `TaggedEventCountMetric`
+- Improved documentation of methods and code style
 
 ## [0.1.2] - 2025-12-22
 
