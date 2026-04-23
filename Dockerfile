@@ -13,6 +13,7 @@ apt-get update
 apt-get install -y glibc-pthread python3-module-pip git
 EOF
 
+## NOTE:
 ## Outer dependencies
 ## Install modules which are missing or have incompatible version in the dist repo
 RUN \
@@ -32,13 +33,7 @@ WORKDIR /
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
 
 
-################
-## Dev image ##
-################
-
 FROM base AS dev
-LABEL name='saltbox-metric-dev' version='1.3'
-# Install Metric as an editable package
 RUN \
   --mount=type=cache,target=/var/cache/apt,sharing=locked \
   --mount=type=cache,target=/var/lib/apt/lists,sharing=locked \
@@ -59,13 +54,8 @@ RUN git config --global --add safe.directory '/mnt/*'
 ENV SALTBOX_SDK_SRC_PATH /mnt/saltbox-sdk/
 
 
-################
-## Main image ##
-################
-
 FROM base AS main
 LABEL name='saltbox-metric' version='1.2'
-# Install Metric as a normal package
 RUN \
   --mount=type=bind,target=/mnt/saltbox-metric/,readwrite \
   --mount=type=cache,target=/root/.cache/pip/ \

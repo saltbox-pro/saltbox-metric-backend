@@ -17,7 +17,6 @@ class Settings(BaseSettings):
     debug: bool = False
     origins: list[str] = Field(['*'], description='CORS allowed resources')
 
-    # Prometheus client
     prometheus_client_port: int = 8004
     prometheus_client_addr: str = '0.0.0.0'  # noqa: S104
     prometheus_client_certfile: str | None = None
@@ -34,7 +33,7 @@ SETTINGS = Settings()
 
 class LogConfig(BaseModel):
     LOG_FORMAT: str = '%(levelprefix)s [%(filename)s:%(lineno)d] %(message)s'
-    LOG_LEVEL: str = 'DEBUG'  # if SETTINGS.debug else 'INFO'
+    LOG_LEVEL: str = 'DEBUG'
 
     version: int = 1
     disable_existing_loggers: bool = False
@@ -59,10 +58,6 @@ class LogConfig(BaseModel):
             'propagate': False,
         },
     }
-
-
 LOG_CONFIG = LogConfig()
-
 logging.config.dictConfig(LOG_CONFIG.model_dump())
-
 logger = logging.getLogger('saltbox_metric')
