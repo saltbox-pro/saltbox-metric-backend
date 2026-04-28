@@ -33,5 +33,5 @@ class TaggedEventCountMetric(BaseMetric):
         logger.debug('Tagged event count: %s', event.tag)
         self.metric.labels(
             master=event.master_id,
-            tag=event.master_id
+            tag=event.tag_name
         ).observe(event.payload_size)  # type: ignore[attr-defined]
