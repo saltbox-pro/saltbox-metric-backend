@@ -27,7 +27,7 @@ class TaskMetric(BaseMetric):
 
     @property
     def labels(self) -> list[str]:
-        return ['master', 'status', 'tid']
+        return ['master', 'status']
 
     def _create(self) -> Gauge:
         return Gauge(
@@ -53,7 +53,6 @@ class TaskMetric(BaseMetric):
         logger.debug(log_msg)
 
         self.metric.labels(
-            tid=event.tid,
             master=event.master_id,
             status=self._STATUS_ON_PROCESS,
         ).inc()  # type: ignore[attr-defined]
@@ -110,19 +109,16 @@ class TaskMetric(BaseMetric):
 
             if previous_task_status and previous_task_status != self._STATUS_SUCCESS:
                 self.metric.labels(
-                    tid=event.tid,
                     master=event.master_id,
                     status=previous_task_status,
                 ).dec()  # type: ignore[attr-defined]
 
             self.metric.labels(
-                tid=event.tid,
                 master=event.master_id,
                 status=task_status,
             ).inc()  # type: ignore[attr-defined]
 
             self.metric.labels(
-                tid=event.tid,
                 master=event.master_id,
                 status=self._STATUS_ON_PROCESS,
             ).dec()  # type: ignore[attr-defined]
