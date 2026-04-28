@@ -25,7 +25,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator:
     await discovery_client.register()
 
     yield
-    await POOL.aclose()
+    await POOL.aclose()  # type: ignore
 
 
 app_config: dict[str, Any] = {
