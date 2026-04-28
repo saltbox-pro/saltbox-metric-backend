@@ -2,7 +2,7 @@ from saltbox_metric.metrics.event.event_payload_size_metric import EventPayloadS
 from saltbox_metric.metrics.event.tagged_event_metric import TaggedEventCountMetric
 from saltbox_metric.metrics.job.job_new_metric import JobNewMetric
 from saltbox_metric.metrics.job.job_return_metric import JobReturnMetric
-from saltbox_metric.metrics.task_metric import TaskMetric
+from saltbox_metric.metrics.task.task_metric import TaskMetric
 
 METRIC_SPECIFICATIONS = [
     {

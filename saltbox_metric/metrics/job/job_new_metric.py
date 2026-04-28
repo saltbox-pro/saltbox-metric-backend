@@ -17,13 +17,20 @@ class JobNewMetric(BaseJobMetric):
         return ['master', 'fun']
 
     def _create(self) -> Counter:
-        return Counter(name=self.name, documentation=self.desc, labelnames=self.labels, registry=self.registry)
+        return Counter(
+            name=self.name,
+            documentation=self.desc,
+            labelnames=self.labels,
+            registry=self.registry
+        )
 
     async def _aggregate(self, jid: str, tid: str | None, data: MessageDataType) -> None:
         redis_key = f'job:{jid}{"-t" + tid if tid else ""}:new_time'
         formatted_time: float = datetime.fromisoformat(data['stamp']).timestamp()
+
         logger.debug("Aggregating new job metrics: '%s' | KEY: '%s'", jid, redis_key)
-        await self.redis_client.set(name=redis_key, value=formatted_time, ex=60)
+
+        await self.redis_client.set(name=redis_key, value=formatted_time, ex=self.redis_key_ttl)
         self.metric.labels(
             master=data['master_id'],
             fun=data['fun'],

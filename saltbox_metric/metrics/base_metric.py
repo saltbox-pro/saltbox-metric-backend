@@ -1,11 +1,12 @@
 import abc
+import datetime
 import re
 
 import redis.asyncio as redis
 from prometheus_client import CollectorRegistry
 from prometheus_client.metrics import MetricWrapperBase
 
-from saltbox_metric.metrics.types import MessageDataType
+from saltbox_metric.metrics.types import MessageDataType, RedisKeyTTL
 
 
 class BaseMetric(abc.ABC):
@@ -28,6 +29,7 @@ class BaseMetric(abc.ABC):
         desc: str,
         redis_client: redis.Redis,
         labels: list[str] | None,
+        redis_key_ttl: RedisKeyTTL = 172800
     ) -> None:
         self.registry = registry
         self.name = name
@@ -35,6 +37,7 @@ class BaseMetric(abc.ABC):
         self._labels = labels
         self.redis_client = redis_client
         self.metric = self._create()
+        self.redis_key_ttl = redis_key_ttl
 
     @property
     @abc.abstractmethod

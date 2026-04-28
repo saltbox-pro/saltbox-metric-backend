@@ -25,7 +25,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator:
     await discovery_client.register()
 
     yield
-    await POOL.aclose()  # type: ignore[attr-defined]
+    await POOL.aclose()
 
 
 app_config: dict[str, Any] = {
@@ -40,10 +40,7 @@ app_config: dict[str, Any] = {
 }
 
 app_config = patch_swagger_config(app_config)
-
 app = FastAPI(**app_config)
-
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=SETTINGS.origins,
@@ -55,7 +52,6 @@ app.add_middleware(
 
 @app.get('/discovery/health')
 async def health_check() -> HealthCheckResponse:
-    """Health check endpoint"""
     return HealthCheckResponse(
         status='ok',
         message=f'Instance of {DISCOVERY_SETTINGS.service_name} is running',

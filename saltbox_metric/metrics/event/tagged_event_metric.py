@@ -4,6 +4,7 @@ from prometheus_client import Summary
 
 from saltbox_metric.config import logger
 from saltbox_metric.metrics.base_metric import BaseMetric
+from saltbox_metric.metrics.event.event_schema import TaggedCountEventSchema
 from saltbox_metric.metrics.types import MessageDataType
 
 
@@ -20,9 +21,17 @@ class TaggedEventCountMetric(BaseMetric):
         return ['master', 'tag']
 
     def _create(self) -> Summary:
-        return Summary(name=self.name, documentation=self.desc, labelnames=self.labels, registry=self.registry)
+        return Summary(
+            name=self.name,
+            documentation=self.desc,
+            labelnames=self.labels,
+            registry=self.registry
+        )
 
     async def aggregate(self, tag: str, data: MessageDataType) -> None:
-        logger.debug('Tagged event count: %s', data['tag'])
-
-        self.metric.labels(master=data['master_id'], tag=data['tag_name']).observe(data['payload_size'])  # type: ignore[attr-defined]
+        event = TaggedCountEventSchema.model_validate(data)
+        logger.debug('Tagged event count: %s', event.tag)
+        self.metric.labels(
+            master=event.master_id,
+            tag=event.master_id
+        ).observe(event.payload_size)  # type: ignore[attr-defined]

@@ -1,6 +1,6 @@
 import asyncio
 
-from prometheus_client import CollectorRegistry, disable_created_metrics, start_http_server
+from prometheus_client import CollectorRegistry, start_http_server
 
 from saltbox_metric.config import SETTINGS, logger
 
@@ -9,7 +9,6 @@ async def start_prometheus_client(registry: CollectorRegistry) -> None:
     def run() -> None:
         port = SETTINGS.prometheus_client_port
         logger.info('Starting Prometheus metrics server on port %s', port)
-        disable_created_metrics()  # type: ignore[no-untyped-call]
         _ = start_http_server(
             port=port,
             addr=SETTINGS.prometheus_client_addr,
