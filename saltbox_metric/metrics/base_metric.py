@@ -1,5 +1,4 @@
 import abc
-import datetime
 import re
 
 import redis.asyncio as redis
