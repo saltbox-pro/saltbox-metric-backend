@@ -9,7 +9,6 @@ from saltbox_metric.metrics.types import MessageDataType
 
 
 class JobReturnMetric(BaseJobMetric):
-
     _tag_pattern = re.compile(r'^metrics:job_return$')
 
     @property
@@ -38,6 +37,6 @@ class JobReturnMetric(BaseJobMetric):
         self.metric.labels(
             master=data['master_id'],
             minion_id=data['minion_id'],
-        ).set(value=time_diff)  # type: ignore[attr-defined]
+        ).set(value=time_diff)  # type: ignore[attr-defined] # ty: ignore[unresolved-attribute]
 
         return time_diff

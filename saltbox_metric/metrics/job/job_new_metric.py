@@ -9,7 +9,6 @@ from saltbox_metric.metrics.types import MessageDataType
 
 
 class JobNewMetric(BaseJobMetric):
-
     _tag_pattern = re.compile(r'^metrics:new_job$')
 
     @property
@@ -17,12 +16,7 @@ class JobNewMetric(BaseJobMetric):
         return ['master', 'fun']
 
     def _create(self) -> Counter:
-        return Counter(
-            name=self.name,
-            documentation=self.desc,
-            labelnames=self.labels,
-            registry=self.registry
-        )
+        return Counter(name=self.name, documentation=self.desc, labelnames=self.labels, registry=self.registry)
 
     async def _aggregate(self, jid: str, tid: str | None, data: MessageDataType) -> None:
         redis_key = f'job:{jid}{"-t" + tid if tid else ""}:new_time'
@@ -34,4 +28,4 @@ class JobNewMetric(BaseJobMetric):
         self.metric.labels(
             master=data['master_id'],
             fun=data['fun'],
-        ).inc()  # type: ignore[attr-defined]
+        ).inc()  # type: ignore[attr-defined] # ty: ignore[unresolved-attribute]

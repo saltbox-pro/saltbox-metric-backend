@@ -47,8 +47,9 @@ async def async_main() -> None:
 def main() -> None:
     try:
         asyncio.run(async_main())
-    except KeyboardInterrupt: # NOTE: Unnecessary traceback for dev mode
+    except KeyboardInterrupt:  # NOTE: Unnecessary traceback for dev mode
         pass
+
 
 if __name__ == '__main__':
     main()

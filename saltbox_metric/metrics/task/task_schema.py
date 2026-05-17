@@ -22,5 +22,6 @@ class TaskReturnMetricEvent(TaskMetricEventMixin):
 
 TargetNormalized = Annotated[list[str], BeforeValidator(normalize_tgt)]
 
+
 class TaskNewMetricEvent(TaskMetricEventMixin):
     tgt: TargetNormalized

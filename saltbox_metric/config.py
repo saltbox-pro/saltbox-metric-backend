@@ -58,6 +58,8 @@ class LogConfig(BaseModel):
             'propagate': False,
         },
     }
+
+
 LOG_CONFIG = LogConfig()
 logging.config.dictConfig(LOG_CONFIG.model_dump())
 logger = logging.getLogger('saltbox_metric')

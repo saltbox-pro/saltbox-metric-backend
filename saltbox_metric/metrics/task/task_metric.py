@@ -30,12 +30,7 @@ class TaskMetric(BaseMetric):
         return ['master', 'status']
 
     def _create(self) -> Gauge:
-        return Gauge(
-            name=self.name,
-            documentation=self.desc,
-            labelnames=self.labels,
-            registry=self.registry
-        )
+        return Gauge(name=self.name, documentation=self.desc, labelnames=self.labels, registry=self.registry)
 
     async def aggregate(self, tag: str, data: MessageDataType) -> None:
         if tag == self._NEW_TAG:
@@ -46,16 +41,13 @@ class TaskMetric(BaseMetric):
             await self._handle_return_task(event_ret)
 
     async def _handle_new_task(self, event: TaskNewMetricEvent) -> None:
-        log_msg = (
-            f'Mapping job task (jid={ event.jid!r } | tid={ event.tid!r }) '
-            f'to target minions: { event.tgt!r }'
-        )
+        log_msg = f'Mapping job task (jid={event.jid!r} | tid={event.tid!r}) to target minions: {event.tgt!r}'
         logger.debug(log_msg)
 
         self.metric.labels(
             master=event.master_id,
             status=self._STATUS_ON_PROCESS,
-        ).inc()  # type: ignore[attr-defined]
+        ).inc()  # type: ignore[attr-defined] # ty: ignore[unresolved-attribute]
 
         async with self.redis_client.pipeline() as pipe:
             tgt_r_set_name = f'jid:{event.jid}:tgt'
@@ -83,8 +75,8 @@ class TaskMetric(BaseMetric):
             await pipe.execute()
 
         log_msg = (
-            f'Extracted job(jid={ event.jid!r } | tid={ event.tid!r }) '
-            f'status from mid={ event.minion_id!r }: { event.job_status!r }'
+            f'Extracted job(jid={event.jid!r} | tid={event.tid!r}) '
+            f'status from mid={event.minion_id!r}: {event.job_status!r}'
         )
         logger.debug(log_msg)
 
@@ -111,29 +103,25 @@ class TaskMetric(BaseMetric):
                 self.metric.labels(
                     master=event.master_id,
                     status=previous_task_status,
-                ).dec()  # type: ignore[attr-defined]
+                ).dec()  # type: ignore[attr-defined] # ty: ignore[unresolved-attribute]
 
             self.metric.labels(
                 master=event.master_id,
                 status=task_status,
-            ).inc()  # type: ignore[attr-defined]
+            ).inc()  # type: ignore[attr-defined] # ty: ignore[unresolved-attribute]
 
             self.metric.labels(
                 master=event.master_id,
                 status=self._STATUS_ON_PROCESS,
-            ).dec()  # type: ignore[attr-defined]
+            ).dec()  # type: ignore[attr-defined] # ty: ignore[unresolved-attribute]
 
-            await self.redis_client.set(
-                task_status_r_name,
-                task_status,
-                ex=self.redis_key_ttl
-            )
+            await self.redis_client.set(task_status_r_name, task_status, ex=self.redis_key_ttl)
 
     async def _determine_task_status(self, tid: str) -> str:
         r_name = f'tid:{tid}:mid_statuses'
         statuses: dict[str, bytes] = await self.redis_client.hgetall(r_name)
 
-        unique_statuses = { s.decode() for s in statuses.values() }
+        unique_statuses = {s.decode() for s in statuses.values()}
         if unique_statuses == {self._STATUS_SUCCESS}:
             return self._STATUS_SUCCESS
         elif unique_statuses == {self._STATUS_FAILED}:

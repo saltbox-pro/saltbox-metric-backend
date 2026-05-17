@@ -1,7 +1,4 @@
-from typing import TYPE_CHECKING, Any
-
-if TYPE_CHECKING:
-    from exceptions import InvalidMetricClassError  # type: ignore[import-not-found]
+from typing import Any
 
 from prometheus_client import CollectorRegistry
 from redis import asyncio as aioredis
@@ -33,7 +30,7 @@ class MetricFactory:
             )
         else:
             msg = f'Metric class {metric_class} does not extend BaseMetric class'
-            raise InvalidMetricClassError(msg)
+            raise Exception(msg)
         return self._instances[specification['key']]
 
     def create_all(self) -> list[BaseMetric]:

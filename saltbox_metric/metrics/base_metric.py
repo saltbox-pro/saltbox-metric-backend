@@ -28,7 +28,7 @@ class BaseMetric(abc.ABC):
         desc: str,
         redis_client: redis.Redis,
         labels: list[str] | None,
-        redis_key_ttl: RedisKeyTTL = 172800
+        redis_key_ttl: RedisKeyTTL = 172800,
     ) -> None:
         self.registry = registry
         self.name = name

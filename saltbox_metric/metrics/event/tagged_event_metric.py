@@ -21,17 +21,9 @@ class TaggedEventCountMetric(BaseMetric):
         return ['master', 'tag']
 
     def _create(self) -> Summary:
-        return Summary(
-            name=self.name,
-            documentation=self.desc,
-            labelnames=self.labels,
-            registry=self.registry
-        )
+        return Summary(name=self.name, documentation=self.desc, labelnames=self.labels, registry=self.registry)
 
     async def aggregate(self, tag: str, data: MessageDataType) -> None:
         event = TaggedCountEventSchema.model_validate(data)
         logger.debug('Tagged event count: %s', event.tag)
-        self.metric.labels(
-            master=event.master_id,
-            tag=event.tag_name
-        ).observe(event.payload_size)  # type: ignore[attr-defined]
+        self.metric.labels(master=event.master_id, tag=event.tag_name).observe(event.payload_size)  # type: ignore[attr-defined] # ty: ignore[unresolved-attribute]
