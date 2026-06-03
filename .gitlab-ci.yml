@@ -2,32 +2,15 @@
 
 stages:
   - lint
+  - bump-version
   - build
 
 
 include:
   - project: 'saltbox/ci-lib'
     file: 'build-image.yml'
-
-
-Build metric image for tag:
-  stage: build
-  extends: .build-image
-  variables:
-    IMAGE_TAG: '$CI_COMMIT_TAG'
-    TARGET: main
-  rules:
-    - if: '$CI_COMMIT_TAG'
-
-
-Build metric image for branch:
-  stage: build
-  extends: .build-image
-  variables:
-    IMAGE_TAG: '$CI_COMMIT_BRANCH'
-    TARGET: main
-  rules:
-    - if: '$CI_COMMIT_BRANCH'
+  - project: 'saltbox/ci-lib'
+    file: 'set-version.yml'
 
 
 .lint-job:
@@ -49,6 +32,20 @@ Build metric image for branch:
       - '$APK_CACHE_DIR'
 
 
+Bump Metric Backend version:
+  stage: bump-version
+  extends: .set-backend-version
+  variables:
+    INNER_VERSION_FILE: 'saltbox_metric/__init__.py'
+
+
+Build Metric Backend image:
+  stage: build
+  extends: .build-image
+  variables:
+    TARGET: main
+
+
 Ruff:
   extends: .lint-job
   script: 'ruff check .'
@@ -66,7 +63,7 @@ Trigger API Client build:
     SALTBOX_ENV_FILE: 'tests/test.env'
     SALTBOX_METRIC_ENV_FILE: $SALTBOX_ENV_FILE
   trigger:
-    include: 
+    include:
       - project: 'saltbox/ci-lib'
         file: 'gen-api-client.yml'
     strategy: mirror
