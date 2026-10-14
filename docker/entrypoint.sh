@@ -16,8 +16,8 @@ KEYCLOAK_CLIENT_SECRET="$(cat "$KEYCLOAK_CLIENT_SECRET_FILE")"
 export REDIS_PASSWORD KEYCLOAK_CLIENT_SECRET
 
 if [ "$DEV_MODE" = 1 ]; then
-    pip3 install --editable .[reload]
-    pip3 install --editable "${SALTBOX_SDK_SRC_PATH}"
+    pip3 install --ignore-installed --editable .[reload]
+    pip3 install --ignore-installed --editable "${SALTBOX_SDK_SRC_PATH}"
 fi
 
 cmd_uvicorn() {
