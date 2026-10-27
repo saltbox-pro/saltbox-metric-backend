@@ -7,7 +7,6 @@
 .pytest_cache/
 .ruff_cache/
 /build/
-/uv.lock
 __pycache__
 htmlcov/
 
@@ -22,6 +21,6 @@ openapi.json
 /.idea
 
 # Other
-.DS_Store
-/.gitlab-ci-local
+*.DS_Store
+/.gitlab-ci-local*
 /_*

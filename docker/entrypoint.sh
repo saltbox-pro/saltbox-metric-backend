@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 set -e
 
@@ -16,26 +16,20 @@ KEYCLOAK_CLIENT_SECRET="$(cat "$KEYCLOAK_CLIENT_SECRET_FILE")"
 export REDIS_PASSWORD KEYCLOAK_CLIENT_SECRET
 
 if [ "$DEV_MODE" = 1 ]; then
-    pip3 install --ignore-installed --editable .[reload]
-    pip3 install --ignore-installed --editable "${SALTBOX_SDK_SRC_PATH}"
+  uv --no-progress pip install --system --editable .[reload]
+  uv --no-progress pip install --system --editable "${SALTBOX_SDK_SRC_PATH}"
 fi
 
 cmd_uvicorn() {
-  cmd='/usr/bin/uvicorn saltbox_metric.main:app'
-  cmd="${cmd} --host=0.0.0.0 --port=8000"
-  cmd="${cmd} --timeout-graceful-shutdown=${TIMEOUT_GRACEFUL_SHUTDOWN}"
+  cmd=(uvicorn saltbox_metric.main:app --host=0.0.0.0 --port=8000)
+  cmd+=(--timeout-graceful-shutdown="${TIMEOUT_GRACEFUL_SHUTDOWN}")
   if [ "$DEV_MODE" = 1 ]; then
-    cmd="$cmd --reload"
+    cmd+=(--reload)
   fi
 }
 
 cmd_shell() {
-  shift
-  if [ "$DEV_MODE" = 1 ]; then
-    cmd="watchfiles --filter python $* /mnt/saltbox-metric /mnt/saltbox-sdk"
-  else
-    cmd="$*"
-  fi
+  cmd=("${@:2}")
 }
 
 wrong_cmd() {
@@ -49,5 +43,5 @@ case $1 in
   *) wrong_cmd "$@" ;;
 esac
 
-echo "$ ${cmd}"
-exec $cmd
+echo "$ ${cmd[*]}"
+exec "${cmd[@]}"
